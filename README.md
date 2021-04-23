@@ -1,4 +1,4 @@
-# helpdesk_shift
+# NO-COVID
 
 A new Flutter project.
 
