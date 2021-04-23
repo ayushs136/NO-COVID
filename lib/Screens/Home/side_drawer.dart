@@ -55,10 +55,10 @@ class SideBarMenu extends StatelessWidget {
               style: TextStyle(fontSize: 20, color: Colors.grey[600]),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UserProfile()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => UserProfile()),
+              // );
             },
           ),
 

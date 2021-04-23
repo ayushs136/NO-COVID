@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helpdesk_shift/models/helper.dart';
+
 import 'package:helpdesk_shift/screens/home/chat_screens/widgets/comments.dart';
 import 'package:helpdesk_shift/screens/home/addPost.dart';
 import 'package:helpdesk_shift/screens/home/friend_requests.dart';
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
 import 'package:helpdesk_shift/screens/home/widgets/create_dialog.dart';
+import 'package:share/share.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
 
@@ -58,7 +59,7 @@ class _FeedsState extends State<Feeds> {
       backgroundColor: darkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         title: Text(
-          "Helpers Feeds",
+          "No COVID!",
           style: TextStyle(color: darkMode ? Colors.white : Colors.black),
         ),
         centerTitle: true,
@@ -116,11 +117,53 @@ class _FeedsState extends State<Feeds> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          SizedBox(
-            height: 200,
+          Container(
+            height: 100,
             width: 400,
-            child: Card(
-              color: Colors.yellow,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => AddPost()));
+              },
+              child: Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Ask for help by tapping here!",
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 8.0, bottom: 8.0, left: 8.0),
+                      child: Text(
+                        "Add a new post to for request from Donor.",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+                color: Color(0xff099FFF),
+              ),
             ),
           ),
           PostStream(darkMode: darkMode),
@@ -145,9 +188,8 @@ class _PostStreamState extends State<PostStream> {
   Stream tweetStream;
   String uid;
   // bool darkMode = false;
+  CollectionReference postCollection;
 
-  CollectionReference postCollection =
-      FirebaseFirestore.instance.collection("posts");
   String likedName = '';
   getTweetStream() async {
     setState(() {
@@ -160,13 +202,14 @@ class _PostStreamState extends State<PostStream> {
     var firebaseuser = FirebaseAuth.instance.currentUser;
     setState(() {
       uid = firebaseuser.uid;
+      postCollection = FirebaseFirestore.instance.collection("posts");
     });
   }
 
   initState() {
     super.initState();
-    getTweetStream();
     getCurrentUserUid();
+    getTweetStream();
   }
 
   // var postCollection = FirebaseFirestore.instance.collection('posts');
@@ -187,7 +230,7 @@ class _PostStreamState extends State<PostStream> {
   }
 
   sharePost(String documentid, String tweet) async {
-    // Share.text("Quitter", tweet, 'text/plain');
+    Share.share(tweet);
     DocumentSnapshot documentSnapshot =
         await postCollection.doc(documentid).get();
     postCollection
@@ -206,10 +249,10 @@ class _PostStreamState extends State<PostStream> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Center(child: CircularProgressIndicator()),
+                CircularProgressIndicator(),
                 Text(
                   "Getting posts...",
-                  style: myStyle(20, Colors.white),
+                  style: myStyle(20, Colors.white, FontWeight.bold),
                 )
               ],
             );
@@ -471,6 +514,7 @@ class _PostStreamState extends State<PostStream> {
 
                   Card(
                     elevation: 30,
+
                     // borderOnForeground: true,
                     shadowColor:
                         widget.darkMode ? Colors.grey[500] : Colors.black,
@@ -645,47 +689,46 @@ class _PostStreamState extends State<PostStream> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               new Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  InkWell(
-                                    onTap: () => likepost(helperDoc['id']),
-                                    child: Row(
-                                      children: [
-                                        // SizedBox(height: 30),
-                                        // Divider(
-                                        //   color: Colors.grey,
-                                        // ),
-                                        helperDoc['likes'].contains(uid)
-                                            ? Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                                // size: 20,
-                                              )
-                                            : Icon(
-                                                FontAwesomeIcons.heart,
-                                                color: widget.darkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                // size: 20,
-                                              ),
-                                        SizedBox(width: 10.0),
-                                        Text(
-                                          (helperDoc['likes'].length + 1)
-                                              .toString(),
-                                          style: myStyle(
-                                              15,
-                                              widget.darkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  new SizedBox(
-                                    width: 16.0,
-                                  ),
+                                  // InkWell(
+                                  //   onTap: () => likepost(helperDoc['id']),
+                                  //   child: Row(
+                                  //     children: [
+                                  //       // SizedBox(height: 30),
+                                  //       // Divider(
+                                  //       //   color: Colors.grey,
+                                  //       // ),
+                                  //       helperDoc['likes'].contains(uid)
+                                  //           ? Icon(
+                                  //               Icons.favorite,
+                                  //               color: Colors.red,
+                                  //               // size: 20,
+                                  //             )
+                                  //           : Icon(
+                                  //               FontAwesomeIcons.heart,
+                                  //               color: widget.darkMode
+                                  //                   ? Colors.white
+                                  //                   : Colors.black,
+                                  //               // size: 20,
+                                  //             ),
+                                  //       SizedBox(width: 10.0),
+                                  //       Text(
+                                  //         (helperDoc['likes'].length + 1)
+                                  //             .toString(),
+                                  //         style: myStyle(
+                                  //             15,
+                                  //             widget.darkMode
+                                  //                 ? Colors.white
+                                  //                 : Colors.black,
+                                  //             FontWeight.bold),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                  // new SizedBox(
+                                  //   width: 16.0,
+                                  // ),
                                   GestureDetector(
                                     onTap: () => Navigator.push(
                                         context,
@@ -695,11 +738,11 @@ class _PostStreamState extends State<PostStream> {
                                     child: Row(
                                       children: [
                                         Icon(
-                                          FontAwesomeIcons.comment,
+                                          Icons.message,
                                           color: widget.darkMode
                                               ? Colors.white
                                               : Colors.black,
-                                          size: 20,
+                                          size: 25,
                                         ),
                                         SizedBox(width: 10.0),
                                         Text(
@@ -744,23 +787,68 @@ class _PostStreamState extends State<PostStream> {
                                   ),
                                 ],
                               ),
-                              new Icon(
-                                FontAwesomeIcons.bookmark,
-                                color: widget.darkMode
-                                    ? Colors.white
-                                    : Colors.black,
-                              )
+                              // new Icon(
+                              //   FontAwesomeIcons.bookmark,
+                              //   color: widget.darkMode
+                              //       ? Colors.white
+                              //       : Colors.black,
+                              // ),
+                              Column(
+                                children: [
+                                  Chip(
+                                    backgroundColor: Colors.red,
+                                    labelPadding: EdgeInsets.all(2.0),
+                                    // avatar: CircleAvatar(
+                                    //   backgroundColor: Colors.white70,
+                                    //   child: Icon(Icons.circle, color: Colors.red,),
+                                    // ),
+                                    label: Text(
+                                      " Plasma ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Chip(
+                                    backgroundColor: Colors.green,
+                                    labelPadding: EdgeInsets.all(2.0),
+                                    // avatar: CircleAvatar(
+                                    //   backgroundColor: Colors.white70,
+                                    //   child: Icon(Icons.circle, color: Colors.red,),
+                                    // ),
+                                    label: Text(
+                                      " Oxygen ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Chip(
+                                    backgroundColor: Colors.pink,
+                                    labelPadding: EdgeInsets.all(2.0),
+                                    // avatar: CircleAvatar(
+                                    //   backgroundColor: Colors.white70,
+                                    //   child: Icon(Icons.circle, color: Colors.red,),
+                                    // ),
+                                    label: Text(
+                                      "Medicine",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
-                            "Liked by " +
-                                likedName +
-                                " and " +
-                                (helperDoc['likes'].length).toString() +
-                                " others",
+                            "Location: " +
+                                (helperDoc['city']).toString() +
+                                ", " +
+                                (helperDoc['state']).toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: widget.darkMode
@@ -799,6 +887,7 @@ class _PostStreamState extends State<PostStream> {
                         //     ],
                         //   ),
                         // ),
+                        SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(

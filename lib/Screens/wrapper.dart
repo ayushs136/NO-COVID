@@ -1,28 +1,29 @@
 
 import 'package:flutter/material.dart';
-import 'package:helpdesk_shift/Screens/Home/home.dart';
-import 'package:helpdesk_shift/models/user.dart';
-import 'package:provider/provider.dart';
 
-import 'Authenticate/sign_in.dart';
+import 'package:helpdesk_shift/Screens/authentication/login.dart';
+import 'package:helpdesk_shift/Screens/authentication/signup.dart';
 
 
-class Wrapper extends StatelessWidget {
+
+class Wrapper extends StatefulWidget {
+  @override
+  _WrapperState createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  bool showSignIn = true;
+
+  void toggleView() {
+    setState(() => showSignIn = !showSignIn);
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final user = Provider.of<User>(context);
-
-    print(user);
-    
-    // return either home or authentication widget
-    if(user==null){
-      print("Signed out");
-    return SignIn();
-    }
-    else{
-      print("Signed in");
-      return Home();
+    if (showSignIn) {
+      return Login(toggleView: toggleView);
+    } else {
+      return SignUp(toggleView: toggleView);
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpdesk_shift/models/helper.dart';
@@ -18,6 +19,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   final newHelper = new Helper();
   final newSkills = new Skills();
+  var userData;
 
   updateAvailability(bool isAvailable) async {
     Map<String, bool> data = Map();
@@ -32,24 +34,40 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Future<Helper> getHelperData(BuildContext context) async {
-      // Helper Helper = Helper();
-      final uid = await ProviderWidget.of(context).auth.getCurrentUID();
-      DocumentSnapshot userData = await FirebaseFirestore.instance
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      var fb = FirebaseAuth.instance.currentUser;
+      userData = FirebaseFirestore.instance
           .collection('userData')
-          .doc(uid)
-          .get();
-      print(userData.data()['name']);
-      // Helper.fr
+          .doc(fb.uid)
+          .snapshots();
+          // Helper.fromMap(userData.data());
+    });
+  }
 
-      return Helper.fromMap(userData.data());
-    }
+  @override
+  Widget build(BuildContext context) {
+    // Future<Helper> getHelperData(BuildContext context) async {
+    //   // Helper Helper = Helper();
+    //   // final uid = await ProviderWidget.of(context).auth.getCurrentUID();
+    //   var fb = FirebaseAuth.instance.currentUser;
+    //   var userData = await FirebaseFirestore.instance
+    //       .collection('userData')
+    //       .doc(fb.uid)
+    //       .snapshots();
+    //   print(userData.data()['name']);
+    //   // Helper.fr
 
-    return FutureBuilder(
-      future: getHelperData(context),
+    //   return 
+    // }
+
+    return StreamBuilder(
+      stream: userData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+         print( snapshot.data.docs.data());
           return Scaffold(
             // floatingActionButton: RaisedButton(
             //   shape: RoundedRectangleBorder(
@@ -59,8 +77,7 @@ class _UserProfileState extends State<UserProfile> {
             //   child: Icon(Icons.edit),
             //   onPressed: () {},
             // ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+        
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
               leading: FlatButton(
@@ -97,7 +114,7 @@ class _UserProfileState extends State<UserProfile> {
               ],
               centerTitle: true,
               title: Text(
-                "${snapshot.data.name.toString().toUpperCase()}'s Profile",
+                "${snapshot.data()['displayName'].toString().toUpperCase()}'s Profile",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: Color(0xff000000),
@@ -146,7 +163,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      snapshot.data.name,
+                      snapshot.data.name == null ? "" : "",
                       style: TextStyle(
                         color: Colors.amberAccent[200],
                         fontWeight: FontWeight.bold,

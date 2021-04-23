@@ -17,12 +17,12 @@ import 'package:helpdesk_shift/screens/home/feeds.dart';
 
 import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
+class NavigationView extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _NavigationViewState createState() => _NavigationViewState();
 }
 
-class _HomeState extends State<Home> with WidgetsBindingObserver {
+class _NavigationViewState extends State<NavigationView> with WidgetsBindingObserver {
   // bool _showIcon = false;
 
   // bool visible() {
@@ -40,8 +40,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   final List<Widget> _children = [
     Feeds(),
-    HelpersNearBy(),
-    SearchScreen(),
+    // HelpersNearBy(),
+    // SearchScreen(),
     ChatListScreen(),
     UserProfile(),
   ];
@@ -129,23 +129,23 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       //     ),
       //   ],
       // ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff3282b8),
-        child: Column(
-          children: [
-            SizedBox(height: 7),
-            Icon(Icons.add),
-            // SizedBox(height: 5),
-            Text('Add Post', style: myStyle(9, Colors.white, FontWeight.bold)),
-          ],
-        ),
-        elevation: 30,
-        onPressed: () {
-          // print("Add pressed");
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddPost()));
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Color(0xff3282b8),
+      //   child: Column(
+      //     children: [
+      //       SizedBox(height: 7),
+      //       Icon(Icons.add),
+      //       // SizedBox(height: 5),
+      //       Text('Add Post', style: myStyle(9, Colors.white, FontWeight.bold)),
+      //     ],
+      //   ),
+      //   elevation: 30,
+      //   onPressed: () {
+      //     // print("Add pressed");
+      //     Navigator.of(context)
+      //         .push(MaterialPageRoute(builder: (context) => AddPost()));
+      //   },
+      // ),
       backgroundColor: Colors.white,
       // appBar: AppBar(
       //   backgroundColor: Color(0xff3282b8),
@@ -205,16 +205,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   Icons.explore,
                 ),
                 label: "Feeds"),
-            BottomNavigationBarItem(
-                icon: new Icon(
-                  Icons.people,
-                ),
-                label: "Helpers"),
-            BottomNavigationBarItem(
-                icon: new Icon(
-                  Icons.search,
-                ),
-                label: "Search"),
+            // BottomNavigationBarItem(
+            //     icon: new Icon(
+            //       Icons.people,
+            //     ),
+            //     label: "Helpers"),
+            // BottomNavigationBarItem(
+            //     icon: new Icon(
+            //       Icons.search,
+            //     ),
+            //     label: "Search"),
             BottomNavigationBarItem(
                 icon: new Icon(
                   Icons.chat,

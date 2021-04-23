@@ -1,12 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:helpdesk_shift/Screens/Home/navigation_view.dart';
+
+import 'package:helpdesk_shift/Screens/wrapper.dart';
 import 'package:helpdesk_shift/provider/image_upload_provider.dart';
 import 'package:helpdesk_shift/provider/user_provider.dart';
 import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
 import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_shift/screens/authentication/sign_up.dart';
-import 'package:helpdesk_shift/screens/home/navigation_view.dart';
-import 'package:helpdesk_shift/screens/home/onboardingfirst_page.dart';
+
+
 import 'package:helpdesk_shift/screens/splash_screen.dart';
 import 'package:helpdesk_shift/shared/loading.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +21,32 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isSigned = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // initializeFCM();
+    FirebaseAuth.instance.authStateChanges().listen((useraccount) {
+      if (useraccount != null) {
+        setState(() {
+          isSigned = true;
+        });
+      } else {
+        setState(() {
+          isSigned = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ProviderWidget(
@@ -57,19 +85,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeController extends StatelessWidget {
+class HomeController extends StatefulWidget {
+  @override
+  _HomeControllerState createState() => _HomeControllerState();
+}
+
+class _HomeControllerState extends State<HomeController> {
+  bool isSigned = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseAuth.instance.authStateChanges().listen((useraccount) {
+      if (useraccount != null) {
+        setState(() {
+          isSigned = true;
+        });
+      } else {
+        setState(() {
+          isSigned = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthServices auth = ProviderWidget.of(context).auth;
     return StreamBuilder(
-        stream: auth.onAuthStateChange,
-        builder: (context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            final bool signedIn = snapshot.hasData;
-            return signedIn ? Home() : OnBoarding();
-          }
-          return Loading();
-        });
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return isSigned == false ? Wrapper() : NavigationView();
+        }
+        return Loading();
+      },
+    );
   }
 }
 
