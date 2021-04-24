@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:helpdesk_shift/Screens/Home/helpers_profile.dart';
+import 'package:helpdesk_shift/Screens/Home/user_profile.dart';
 import 'package:helpdesk_shift/screens/home/addPost.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
@@ -36,6 +38,7 @@ class _CommentsPageState extends State<CommentsPage> {
       'commentsCount': commentCount['commentsCount'] + 1,
     });
     commentController.clear();
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -72,33 +75,57 @@ class _CommentsPageState extends State<CommentsPage> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot commentDoc =
                               snapshot.data.docs[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage:
-                                  NetworkImage(commentDoc['displayImg']),
-                            ),
-                            title: Row(
-                              children: [
-                                Text(
-                                  commentDoc['username'],
-                                  style: myStyle(
-                                      15, Colors.black, FontWeight.w400),
-                                ),
-                                SizedBox(width: 15),
-                                Text(
-                                  commentDoc['comment'],
-                                  style: myStyle(
-                                    20,
-                                    Colors.grey,
-                                    FontWeight.w500,
+                          return InkWell(
+                            onTap: () {
+                                if (FirebaseAuth.instance.currentUser.uid != commentDoc['uid']) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HelperProfile(
+                                                  // helper: Helper.fromMap(
+                                                  //     helperDoc.data()
+                                                  //     ),
+                                                  helperUid: commentDoc['uid']
+                                                ),
+                                              ));
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserProfile(),
+                                              ));
+                                        }
+                            },
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                backgroundImage:
+                                    NetworkImage(commentDoc['displayImg']),
+                              ),
+                              title: Row(
+                                children: [
+                                  Text(
+                                    commentDoc['username'],
+                                    style: myStyle(
+                                        15, Colors.black, FontWeight.w400),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 15),
+                                  Text(
+                                    commentDoc['comment'],
+                                    style: myStyle(
+                                      20,
+                                      Colors.grey,
+                                      FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Text(tAgo
+                                  .format(commentDoc['time'].toDate())
+                                  .toString()),
                             ),
-                            subtitle: Text(tAgo
-                                .format(commentDoc['time'].toDate())
-                                .toString()),
                           );
                         });
                   },

@@ -269,7 +269,7 @@ class _FeedsState extends State<Feeds> {
                     padding: const EdgeInsets.all(8.0),
                     child: Chip(
                       backgroundColor:
-                          plasma == true ? Colors.orange : Colors.white,
+                          plasma == true ? Colors.purple : Colors.white,
                       label: Text("Plasma",
                           style: TextStyle(
                             color: plasma == true ? Colors.white : Colors.black,
@@ -766,9 +766,9 @@ class _PostStreamState extends State<PostStream> {
                                   children: [
                                     helperDoc['plasma'] == true
                                         ? Chip(
-                                            shadowColor: Colors.red,
+                                            shadowColor: Colors.purple,
                                             elevation: 5,
-                                            backgroundColor: Colors.red,
+                                            backgroundColor: Colors.purple,
                                             labelPadding: EdgeInsets.all(2.0),
                                             // avatar: CircleAvatar(
                                             //   backgroundColor: Colors.white70,
