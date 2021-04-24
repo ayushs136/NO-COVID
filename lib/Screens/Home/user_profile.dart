@@ -20,7 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   final newHelper = new Helper();
   final newSkills = new Skills();
   var userData;
- 
+
   updateAvailability(bool isAvailable) async {
     Map<String, bool> data = Map();
 
@@ -41,7 +41,7 @@ class _UserProfileState extends State<UserProfile> {
       var fb = FirebaseAuth.instance.currentUser;
       userData = FirebaseFirestore.instance
           .collection('userData')
-          .doc(fb.uid)
+          .where('uid', isEqualTo: fb.uid)
           .snapshots();
       // Helper.fromMap(userData.data());
     });
@@ -67,7 +67,7 @@ class _UserProfileState extends State<UserProfile> {
       stream: userData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          print(snapshot.data.docs.data());
+          // print(snapshot.data.docs[0].data());
           return Scaffold(
             // floatingActionButton: RaisedButton(
             //   shape: RoundedRectangleBorder(

@@ -23,7 +23,7 @@ class ChatListScreen extends StatelessWidget {
         elevation: 20,
       ),
       backgroundColor: Colors.black,
-      floatingActionButton: NewChatButton(),
+      // floatingActionButton: NewChatButton(),
       body: ChatListContainer(),
     );
   }
