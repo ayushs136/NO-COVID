@@ -147,7 +147,7 @@ class _AddPostState extends State<AddPost> {
           .doc(userdoc.data()['uid'] + "-" + randomText)
           .set(data);
 
-       Navigator.of(context).pop();
+       Navigator.of(context).maybePop();
     }
     //only image
     /*
