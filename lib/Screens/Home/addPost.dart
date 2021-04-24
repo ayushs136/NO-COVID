@@ -125,7 +125,7 @@ class _AddPostState extends State<AddPost> {
     // if (tweetController.text != '' && imagePath == null) {
     if (tweetController.text != '') {
       var data = {
-        'username': userdoc.data()['diaplayName'],
+        'username': userdoc.data()['displayName'],
         'photoURL': userdoc.data()['photoURL'],
         'uid': firebaseuser.uid,
         'id': userdoc.data()['uid'] + "-" + randomText,
@@ -147,7 +147,7 @@ class _AddPostState extends State<AddPost> {
           .doc(userdoc.data()['uid'] + "-" + randomText)
           .set(data);
 
-      Navigator.pop(context);
+       Navigator.of(context).pop();
     }
     //only image
     /*

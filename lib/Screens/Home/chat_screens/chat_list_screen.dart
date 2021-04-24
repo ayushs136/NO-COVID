@@ -14,10 +14,11 @@ class ChatListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text("Chats"),
         centerTitle: true,
         bottomOpacity: 40,
-        backgroundColor: Color(0xff3282b8),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey,
         elevation: 20,
       ),

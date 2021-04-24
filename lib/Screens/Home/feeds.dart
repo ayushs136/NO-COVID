@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpdesk_shift/Screens/Home/sidebar.dart';
 
 import 'package:helpdesk_shift/screens/home/chat_screens/widgets/comments.dart';
 import 'package:helpdesk_shift/screens/home/addPost.dart';
-import 'package:helpdesk_shift/screens/home/friend_requests.dart';
+
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
-import 'package:helpdesk_shift/screens/home/widgets/create_dialog.dart';
+
 import 'package:share/share.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
@@ -27,7 +28,13 @@ class Feeds extends StatefulWidget {
 }
 
 class _FeedsState extends State<Feeds> {
+  var db = FirebaseFirestore.instance;
+  var postCollection;
+
   bool darkMode = true;
+  bool plCheck = false;
+  bool oxyCheck = false;
+  bool medicinecheck = false;
   @override
   Widget build(BuildContext context) {
     // Stream tweetStream;
@@ -56,6 +63,7 @@ class _FeedsState extends State<Feeds> {
     // }
 
     return Scaffold(
+      drawer: SideBarMenu(),
       backgroundColor: darkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         title: Text(
@@ -67,51 +75,52 @@ class _FeedsState extends State<Feeds> {
         backgroundColor: darkMode ? Colors.black : Colors.white,
         shadowColor: Colors.grey[500],
         elevation: 20,
-        leading: InkWell(
-          onTap: () {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => UpdateDialog(
-                dialogText: "",
-                fileURL: "",
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(FontAwesomeIcons.userFriends,
-                color: darkMode ? Colors.white : Colors.black),
-          ),
-        ),
+        // leading: InkWell(
+        //   onTap: () {
+        //     // showDialog(
+        //     //   context: context,
+        //     //   barrierDismissible: false,
+        //     //   builder: (_) => UpdateDialog(
+        //     //     dialogText: "",
+        //     //     fileURL: "",
+        //     //   ),
+        //     // );
+        //     SideBarMenu();
+        //   },
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Icon(FontAwesomeIcons.userFriends,
+        //         color: darkMode ? Colors.white : Colors.black),
+        //   ),
+        // ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Switch(
-              activeTrackColor: Colors.white,
-              activeColor: Colors.black,
-              inactiveTrackColor: Colors.black,
-              inactiveThumbColor: Colors.white,
-              value: darkMode,
-              onChanged: (bool val) {
-                setState(() {
-                  darkMode = val;
-                  // print(darkMode);
-                });
-              },
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FriendRequests()));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(FontAwesomeIcons.redditSquare,
-                  color: darkMode ? Colors.white : Colors.black),
-            ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Switch(
+          //     activeTrackColor: Colors.white,
+          //     activeColor: Colors.black,
+          //     inactiveTrackColor: Colors.black,
+          //     inactiveThumbColor: Colors.white,
+          //     value: darkMode,
+          //     onChanged: (bool val) {
+          //       setState(() {
+          //         darkMode = val;
+          //         // print(darkMode);
+          //       });
+          //     },
+          //   ),
+          // ),
+          // InkWell(
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => FriendRequests()));
+          //   },
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(8.0),
+          //     child: Icon(FontAwesomeIcons.redditSquare,
+          //         color: darkMode ? Colors.white : Colors.black),
+          //   ),
+          // )
         ],
       ),
       body: SingleChildScrollView(
@@ -166,7 +175,93 @@ class _FeedsState extends State<Feeds> {
               ),
             ),
           ),
-          PostStream(darkMode: darkMode),
+          Card(
+            color: Colors.pink,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      postCollection = db
+                          .collection("posts")
+                          .where("visible", isEqualTo: true)
+                          .orderBy('time', descending: true)
+                          .snapshots();
+                    });
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (BuildContext context) => super.widget));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Chip(
+                      label: Text("All", style: TextStyle(color: Colors.black)),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      postCollection = db
+                          .collection("posts")
+                          .where("visible", isEqualTo: true)
+                          .where("plasma", isEqualTo: true)
+                          .orderBy('time', descending: true)
+                          .snapshots();
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Chip(
+                      label:
+                          Text("Plasma", style: TextStyle(color: Colors.black)),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      postCollection = db
+                          .collection("posts")
+                          .where("visible", isEqualTo: true)
+                          .where("oxygen", isEqualTo: true)
+                          .orderBy('time', descending: true)
+                          .snapshots();
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Chip(
+                      label:
+                          Text("Oxygen", style: TextStyle(color: Colors.black)),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      postCollection = db
+                          .collection("posts")
+                          .where("visible", isEqualTo: true)
+                          .where("medicine", isEqualTo: true)
+                          .orderBy('time', descending: true)
+                          .snapshots();
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Chip(
+                      label: Text("Medicine",
+                          style: TextStyle(color: Colors.black)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PostStream(darkMode: darkMode, collection: postCollection),
         ],
       )),
     );
@@ -176,9 +271,16 @@ class _FeedsState extends State<Feeds> {
 class PostStream extends StatefulWidget {
   // final Stream userStream;
   // final String uid;
-  final bool darkMode;
-
-  const PostStream({Key key, this.darkMode}) : super(key: key);
+  bool darkMode;
+  Stream collection;
+  String collectioName;
+  PostStream(
+      {Key key,
+      this.darkMode,
+      this.collection,
+      this.collectioName
+      })
+      : super(key: key);
   // const PostStream({Key key, this.userStream, this.uid}) : super(key: key);
   @override
   _PostStreamState createState() => _PostStreamState();
@@ -193,8 +295,11 @@ class _PostStreamState extends State<PostStream> {
   String likedName = '';
   getTweetStream() async {
     setState(() {
-      tweetStream =
-          postCollection.orderBy('time', descending: true).snapshots();
+      // tweetStream = postCollection
+      //     .where("visible", isEqualTo: true)
+      //     .orderBy('time', descending: true)
+      //     .snapshots();
+      tweetStream = widget.collection;
     });
   }
 
@@ -242,19 +347,21 @@ class _PostStreamState extends State<PostStream> {
   Widget build(BuildContext context) {
     // bool isPressed = false;
     return StreamBuilder(
-        stream: tweetStream,
+        stream: widget.collection,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                Text(
-                  "Getting posts...",
-                  style: myStyle(20, Colors.white, FontWeight.bold),
-                )
-              ],
+            return Center(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text(
+                    "Getting posts...",
+                    style: myStyle(20, Colors.white, FontWeight.bold),
+                  )
+                ],
+              ),
             );
           }
 
@@ -276,242 +383,7 @@ class _PostStreamState extends State<PostStream> {
 
               return Column(
                 children: [
-//                   Card(
-//                     elevation: 10,
-//                     color: Colors.blue[10],
-//                     child: ListTile(
-//                       trailing: Column(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         children: [
-//                           Container(
-//                               child: Icon(
-//                             Icons.more_vert,
-//                             color: Colors.grey,
-//                           )),
-//                           SizedBox(height: 10),
-
-//                           Text(
-//                             tAgo
-//                                 .format(helperDoc.data()['time'].toDate())
-//                                 .toString(),
-//                             style: myStyle(10, Colors.grey, FontWeight.bold),
-//                           ),
-//                           // SizedBox(height: 5),
-//                           // InkWell(
-//                           //   onTap: () {
-//                           //     print("gdg");
-//                           //   },
-//                           //   child: Container(
-//                           //     padding: const EdgeInsets.only(left: 10.0),
-//                           //     // padding: const EdgeInsets.all(.0),
-//                           //     decoration: BoxDecoration(
-//                           //         color: Colors.black,
-//                           //         borderRadius: BorderRadius.circular(5),
-//                           //         border: Border.all(color: Colors.grey)),
-//                           //     width: 90,
-//                           //     height: 35,
-//                           //     child: Center(
-//                           //       child: Row(
-//                           //         children: [
-//                           //           Icon(Icons.person_add,
-//                           //               color: Colors.white, size: 16),
-//                           //           SizedBox(width: 7),
-//                           //           Text(
-//                           //             " Connect",
-//                           //             style: myStyle(10, Colors.white),
-//                           //           ),
-//                           //         ],
-//                           //       ),
-//                           //     ),
-//                           //   ),
-//                           // ),
-//                         ],
-//                       ),
-//                       leading: InkWell(
-//                         onTap: () {
-//                           if (helperDoc.data()['uid'] != uid) {
-//                             Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => HelperProfile(
-//                                       helper: Helper.fromMap(helperDoc.data())),
-//                                 ));
-//                           } else {
-//                             Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => UserProfile(),
-//                                 ));
-//                           }
-//                         },
-//                         child: CircleAvatar(
-//                           radius: 20,
-//                           backgroundColor: Colors.white,
-//                           backgroundImage: NetworkImage(
-//                               helperDoc.data()['photoURL'] == null
-//                                   ? ''
-//                                   : helperDoc.data()['photoURL']),
-//                         ),
-//                       ),
-//                       title: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           SizedBox(height: 20),
-//                           Text(
-//                             helperDoc.data()['username'],
-//                             style: myStyle(15, Colors.black, FontWeight.w600),
-//                           ),
-//                           SizedBox(height: 10),
-//                           Divider(
-//                             color: Colors.grey,
-//                           )
-//                         ],
-//                       ),
-//                       contentPadding: EdgeInsets.all(0.3),
-//                       subtitle: Container(
-//                         // color: Colors.black,
-//                         child: Padding(
-//                           padding: const EdgeInsets.all(0.001),
-//                           child: Column(
-//                             // crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               if (helperDoc.data()['type'] == 1)
-//                                 Padding(
-//                                   padding: const EdgeInsets.all(8.0),
-//                                   child: Text(
-//                                     helperDoc.data()['tweet'],
-//                                     style: myStyle(
-//                                         12, Colors.black, FontWeight.w400),
-//                                   ),
-//                                 ),
-//                               if (helperDoc.data()['type'] == 2)
-//                                 Image(
-//                                   image:
-//                                       NetworkImage(helperDoc.data()['image']),
-//                                 ),
-//                               if (helperDoc.data()['type'] == 3)
-//                                 Column(
-//                                   children: [
-//                                     Text(
-//                                       helperDoc.data()['tweet'],
-//                                       style: myStyle(
-//                                           12, Colors.black, FontWeight.w400),
-//                                     ),
-//                                     SizedBox(height: 10),
-//                                     InkWell(
-//                                       onDoubleTap: () {
-//                                         likepost(helperDoc.data()['id']);
-//                                       },
-//                                       child: Container(
-//                                         padding: EdgeInsets.all(10),
-//                                         decoration: BoxDecoration(
-//                                             borderRadius:
-//                                                 BorderRadius.circular(20)),
-//                                         child: Image(
-//                                           image: NetworkImage(
-//                                               helperDoc.data()['image']),
-//                                         ),
-// // Flexible(
-// //                                         fit: FlexFit.loose,
-// //                                         child: new Image.network(
-// //                                           "https://images.pexels.com/photos/672657/pexels-photo-672657.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-// //                                           fit: BoxFit.cover,
-// //                                         ),
-// //                                       ),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               Divider(color: Colors.grey),
-//                               SizedBox(height: 10),
-//                               Row(
-//                                 mainAxisAlignment:
-//                                     MainAxisAlignment.spaceBetween,
-//                                 children: [
-//                                   GestureDetector(
-//                                     onTap: () => Navigator.push(
-//                                         context,
-//                                         MaterialPageRoute(
-//                                             builder: (context) =>
-//                                                 CommentsPage(helperDoc['id']))),
-//                                     child: Row(
-//                                       children: [
-//                                         Icon(
-//                                           Icons.comment,
-//                                           color: Colors.black,
-//                                           size: 20,
-//                                         ),
-//                                         SizedBox(width: 10.0),
-//                                         Text(
-//                                           helperDoc
-//                                               .data()['commentsCount']
-//                                               .toString(),
-//                                           style: myStyle(15, Colors.black,
-//                                               FontWeight.bold),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                   InkWell(
-//                                     onTap: () =>
-//                                         likepost(helperDoc.data()['id']),
-//                                     child: Row(
-//                                       children: [
-//                                         helperDoc.data()['likes'].contains(uid)
-//                                             ? Icon(
-//                                                 Icons.favorite,
-//                                                 color: Colors.red,
-//                                                 size: 20,
-//                                               )
-//                                             : Icon(
-//                                                 Icons.favorite_border,
-//                                                 color: Colors.black,
-//                                                 size: 20,
-//                                               ),
-//                                         SizedBox(width: 10.0),
-//                                         Text(
-//                                           helperDoc
-//                                               .data()['likes']
-//                                               .length
-//                                               .toString(),
-//                                           style: myStyle(15, Colors.black,
-//                                               FontWeight.bold),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                   InkWell(
-//                                     onTap: () => sharePost(
-//                                         helperDoc.data()['id'],
-//                                         helperDoc.data()['tweet']),
-//                                     child: Row(
-//                                       children: [
-//                                         Icon(
-//                                           Icons.share,
-//                                           color: Colors.black,
-//                                           size: 20,
-//                                         ),
-//                                         SizedBox(width: 10.0),
-//                                         Text(
-//                                           helperDoc.data()['shares'].toString(),
-//                                           style: myStyle(15, Colors.black,
-//                                               FontWeight.bold),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-                  // Divider(
-                  //   color: Colors.black,
-                  // ),
-
+//
                   Card(
                     elevation: 30,
 
@@ -587,13 +459,27 @@ class _PostStreamState extends State<PostStream> {
                                   new SizedBox(
                                     width: 10.0,
                                   ),
-                                  new Text(
-                                    helperDoc['username'],
-                                    style: TextStyle(
-                                        color: widget.darkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w400),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        helperDoc['username'],
+                                        style: TextStyle(
+                                            color: widget.darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      Text(
+                                        tAgo
+                                            .format(helperDoc['time'].toDate())
+                                            .toString(),
+                                        style: myStyle(
+                                            10, Colors.grey, FontWeight.bold),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),
@@ -610,7 +496,7 @@ class _PostStreamState extends State<PostStream> {
                             child: Text(
                               helperDoc['tweet'],
                               style: myStyle(
-                                  12,
+                                  14,
                                   widget.darkMode ? Colors.white : Colors.black,
                                   FontWeight.w400),
                             ),
@@ -793,50 +679,64 @@ class _PostStreamState extends State<PostStream> {
                               //       ? Colors.white
                               //       : Colors.black,
                               // ),
-                              Column(
+                              Row(
                                 children: [
-                                  Chip(
-                                    backgroundColor: Colors.red,
-                                    labelPadding: EdgeInsets.all(2.0),
-                                    // avatar: CircleAvatar(
-                                    //   backgroundColor: Colors.white70,
-                                    //   child: Icon(Icons.circle, color: Colors.red,),
-                                    // ),
-                                    label: Text(
-                                      " Plasma ",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Chip(
-                                    backgroundColor: Colors.green,
-                                    labelPadding: EdgeInsets.all(2.0),
-                                    // avatar: CircleAvatar(
-                                    //   backgroundColor: Colors.white70,
-                                    //   child: Icon(Icons.circle, color: Colors.red,),
-                                    // ),
-                                    label: Text(
-                                      " Oxygen ",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Chip(
-                                    backgroundColor: Colors.pink,
-                                    labelPadding: EdgeInsets.all(2.0),
-                                    // avatar: CircleAvatar(
-                                    //   backgroundColor: Colors.white70,
-                                    //   child: Icon(Icons.circle, color: Colors.red,),
-                                    // ),
-                                    label: Text(
-                                      "Medicine",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                  helperDoc['plasma'] == true
+                                      ? Chip(
+                                          shadowColor: Colors.red,
+                                          elevation: 5,
+                                          backgroundColor: Colors.red,
+                                          labelPadding: EdgeInsets.all(2.0),
+                                          // avatar: CircleAvatar(
+                                          //   backgroundColor: Colors.white70,
+                                          //   child: Icon(Icons.circle, color: Colors.red,),
+                                          // ),
+                                          label: Text(
+                                            " Plasma ",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(width: 10),
+                                  helperDoc['oxygen'] == true
+                                      ? Chip(
+                                          shadowColor: Colors.green,
+                                          elevation: 5,
+                                          backgroundColor: Colors.green,
+                                          labelPadding: EdgeInsets.all(2.0),
+                                          // avatar: CircleAvatar(
+                                          //   backgroundColor: Colors.white70,
+                                          //   child: Icon(Icons.circle, color: Colors.red,),
+                                          // ),
+                                          label: Text(
+                                            " Oxygen ",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(width: 10),
+                                  helperDoc['medicine'] == true
+                                      ? Chip(
+                                          shadowColor: Colors.pink,
+                                          elevation: 5,
+                                          backgroundColor: Colors.pink,
+                                          labelPadding: EdgeInsets.all(2.0),
+                                          // avatar: CircleAvatar(
+                                          //   backgroundColor: Colors.white70,
+                                          //   child: Icon(Icons.circle, color: Colors.red,),
+                                          // ),
+                                          label: Text(
+                                            "Medicine",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ],
@@ -888,13 +788,7 @@ class _PostStreamState extends State<PostStream> {
                         //   ),
                         // ),
                         SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            tAgo.format(helperDoc['time'].toDate()).toString(),
-                            style: myStyle(10, Colors.grey, FontWeight.bold),
-                          ),
-                        ),
+
                         SizedBox(height: 20),
                       ],
                     ),
