@@ -29,30 +29,30 @@ class Feeds extends StatefulWidget {
 
 class _FeedsState extends State<Feeds> {
   var db = FirebaseFirestore.instance;
-  Stream<QuerySnapshot> postCollection  ;
+  Stream<QuerySnapshot> postCollection;
 
   bool darkMode = true;
-   bool all = true, oxy = false, plasma = false, medicine = false;
- getTweetStream() async {
-      setState(() {
-       postCollection  = db
-                          .collection("posts")
-                          .where("visible", isEqualTo: true)
-                          .orderBy('time', descending: true)
-                          .snapshots();
-      });
-    }
+  bool all = true, oxy = false, plasma = false, medicine = false;
+  getTweetStream() async {
+    setState(() {
+      postCollection = db
+          .collection("posts")
+          .where("visible", isEqualTo: true)
+          .orderBy('time', descending: true)
+          .snapshots();
+    });
+  }
 
-    // getCurrentUserUid() async {
-    //   var firebaseuser = FirebaseAuth.instance.currentUser;
-    //   setState(() {
-    //     uid = firebaseuser.uid;
-    //   });
-    // }
-    // 
-    initState() {
+  // getCurrentUserUid() async {
+  //   var firebaseuser = FirebaseAuth.instance.currentUser;
+  //   setState(() {
+  //     uid = firebaseuser.uid;
+  //   });
+  // }
+  //
+  initState() {
     super.initState();
-     getTweetStream();
+    getTweetStream();
   }
 
   @override
@@ -61,9 +61,6 @@ class _FeedsState extends State<Feeds> {
     // String uid;
     // CollectionReference postCollection =
     //     FirebaseFirestore.instance.collection("posts");
-    
-   
-   
 
     return Scaffold(
       drawer: SideBarMenu(),
@@ -186,12 +183,17 @@ class _FeedsState extends State<Feeds> {
                 InkWell(
                   onTap: () {
                     setState(() {
+                      all = true;
+                      oxy = false;
+                      plasma = false;
+                      medicine = false;
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
                           .orderBy('time', descending: true)
                           .snapshots();
                     });
+
                     // Navigator.pushReplacement(
                     //     context,
                     //     MaterialPageRoute(
@@ -200,13 +202,22 @@ class _FeedsState extends State<Feeds> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Chip(
-                      label: Text("All", style: TextStyle(color: Colors.black)),
+                      backgroundColor:
+                          all == true ? Colors.yellow : Colors.white,
+                      label: Text("All",
+                          style: TextStyle(
+                            color:  Colors.black,
+                          )),
                     ),
                   ),
                 ),
                 InkWell(
                   onTap: () {
                     setState(() {
+                      plasma = true;
+                      all = false;
+                      oxy = false;
+                      medicine = false;
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
@@ -218,14 +229,22 @@ class _FeedsState extends State<Feeds> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Chip(
-                      label:
-                          Text("Plasma", style: TextStyle(color: Colors.black)),
+                      backgroundColor:
+                          plasma == true ? Colors.orange : Colors.white,
+                      label: Text("Plasma",
+                          style: TextStyle(
+                            color: plasma == true ? Colors.white : Colors.black,
+                          )),
                     ),
                   ),
                 ),
                 InkWell(
                   onTap: () {
                     setState(() {
+                      oxy = true;
+                      plasma = false;
+                      all = false;
+                      medicine = false;
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
@@ -237,14 +256,22 @@ class _FeedsState extends State<Feeds> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Chip(
-                      label:
-                          Text("Oxygen", style: TextStyle(color: Colors.black)),
+                      backgroundColor:
+                          oxy == true ? Colors.green : Colors.white,
+                      label: Text("Oxygen",
+                          style: TextStyle(
+                            color: oxy == true ? Colors.white : Colors.black,
+                          )),
                     ),
                   ),
                 ),
                 InkWell(
                   onTap: () {
                     setState(() {
+                      medicine = true;
+                      oxy = false;
+                      plasma = false;
+                      all = false;
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
@@ -256,8 +283,13 @@ class _FeedsState extends State<Feeds> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Chip(
+                      backgroundColor:
+                          medicine == true ? Colors.pinkAccent : Colors.white,
                       label: Text("Medicine",
-                          style: TextStyle(color: Colors.black)),
+                          style: TextStyle(
+                            color:
+                                medicine == true ? Colors.white : Colors.black,
+                          )),
                     ),
                   ),
                 ),
@@ -277,12 +309,7 @@ class PostStream extends StatefulWidget {
   bool darkMode;
   Stream collection;
   String collectioName;
-  PostStream(
-      {Key key,
-      this.darkMode,
-      this.collection,
-      this.collectioName
-      })
+  PostStream({Key key, this.darkMode, this.collection, this.collectioName})
       : super(key: key);
   // const PostStream({Key key, this.userStream, this.uid}) : super(key: key);
   @override
