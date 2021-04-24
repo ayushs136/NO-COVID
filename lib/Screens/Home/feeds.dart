@@ -29,25 +29,19 @@ class Feeds extends StatefulWidget {
 
 class _FeedsState extends State<Feeds> {
   var db = FirebaseFirestore.instance;
-  var postCollection;
+  Stream<QuerySnapshot> postCollection  ;
 
   bool darkMode = true;
-  bool plCheck = false;
-  bool oxyCheck = false;
-  bool medicinecheck = false;
-  @override
-  Widget build(BuildContext context) {
-    // Stream tweetStream;
-    // String uid;
-    // CollectionReference postCollection =
-    //     FirebaseFirestore.instance.collection("posts");
-
-    // getTweetStream() async {
-    //   setState(() {
-    //     tweetStream =
-    //         postCollection.orderBy('time', descending: true).snapshots();
-    //   });
-    // }
+   bool all = true, oxy = false, plasma = false, medicine = false;
+ getTweetStream() async {
+      setState(() {
+       postCollection  = db
+                          .collection("posts")
+                          .where("visible", isEqualTo: true)
+                          .orderBy('time', descending: true)
+                          .snapshots();
+      });
+    }
 
     // getCurrentUserUid() async {
     //   var firebaseuser = FirebaseAuth.instance.currentUser;
@@ -55,12 +49,21 @@ class _FeedsState extends State<Feeds> {
     //     uid = firebaseuser.uid;
     //   });
     // }
+    // 
+    initState() {
+    super.initState();
+     getTweetStream();
+  }
 
-    // initState() {
-    //   super.initState();
-    //   getTweetStream();
-    //   getCurrentUserUid();
-    // }
+  @override
+  Widget build(BuildContext context) {
+    // Stream tweetStream;
+    // String uid;
+    // CollectionReference postCollection =
+    //     FirebaseFirestore.instance.collection("posts");
+    
+   
+   
 
     return Scaffold(
       drawer: SideBarMenu(),

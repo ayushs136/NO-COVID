@@ -20,7 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   final newHelper = new Helper();
   final newSkills = new Skills();
   var userData;
-
+ 
   updateAvailability(bool isAvailable) async {
     Map<String, bool> data = Map();
 
@@ -43,7 +43,7 @@ class _UserProfileState extends State<UserProfile> {
           .collection('userData')
           .doc(fb.uid)
           .snapshots();
-          // Helper.fromMap(userData.data());
+      // Helper.fromMap(userData.data());
     });
   }
 
@@ -60,14 +60,14 @@ class _UserProfileState extends State<UserProfile> {
     //   print(userData.data()['name']);
     //   // Helper.fr
 
-    //   return 
+    //   return
     // }
 
     return StreamBuilder(
       stream: userData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-         print( snapshot.data.docs.data());
+          print(snapshot.data.docs.data());
           return Scaffold(
             // floatingActionButton: RaisedButton(
             //   shape: RoundedRectangleBorder(
@@ -77,7 +77,7 @@ class _UserProfileState extends State<UserProfile> {
             //   child: Icon(Icons.edit),
             //   onPressed: () {},
             // ),
-        
+
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
               leading: FlatButton(
