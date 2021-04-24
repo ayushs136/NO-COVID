@@ -117,6 +117,9 @@ class SideBarMenu extends StatelessWidget {
                           )),
                 );
               }),
+              ListTile(
+                title: Text("Connect here for support:\nkronosa136@gmail.com"),
+              )
         ],
       ),
     );

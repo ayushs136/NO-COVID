@@ -128,17 +128,24 @@ class _LoginState extends State<Login> {
                 alignment: Alignment.center,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Login to buy from ",
+                          "Login to ask for help",
                           style: myStyle(30, Colors.black, FontWeight.bold),
+                           textAlign: TextAlign.center,
                         ),
-                        Text(
-                          " Aas Pass",
-                          style: myStyle(30, Colors.blue, FontWeight.bold),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "We don't want to provide\nunvarified donors",
+                            style: myStyle(20, Colors.blue, FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),

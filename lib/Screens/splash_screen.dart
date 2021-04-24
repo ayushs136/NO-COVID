@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:helpdesk_shift/Screens/authentication/login.dart';
 import 'package:helpdesk_shift/main.dart';
 import 'package:helpdesk_shift/provider/assets.dart';
 
@@ -53,9 +54,16 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                child: Image.asset(
-                  Assets.helpDeskLogo,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      Assets.covidBackground,
+                    ),
+                    Text("NO COVID: HELP DESK", style: myStyle(20, Colors.blue, FontWeight.bold),
+                            textAlign: TextAlign.center,),
+                  ],
                 ),
+                
               ),
               SizedBox(height: 10),
               CircularProgressIndicator(

@@ -1,6 +1,4 @@
-  
 import 'package:flutter/material.dart';
-import 'package:helpdesk_shift/screens/home/search.dart';
 
 class QuietBox extends StatelessWidget {
   @override
@@ -9,23 +7,24 @@ class QuietBox extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25),
         child: Container(
-          color:  Color(0xff272c35),
+          color: Color(0xff272c35),
           padding: EdgeInsets.symmetric(vertical: 35, horizontal: 25),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                "This is where all the contacts are listed",
+                "This is where all the chats are listed",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white,
+                style: TextStyle(
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
                 ),
               ),
               SizedBox(height: 25),
               Text(
-                "Search for your friends and family to start calling or chatting with them",
+                "Tap on the profile picture of the person to send them a message to help.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -35,17 +34,17 @@ class QuietBox extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 25),
-              FlatButton(
-                color:  Color(0xff0077d7),
-                child: Text("START SEARCHING", style: TextStyle(color: Colors.white,
-                ),),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchScreen(),
-                  ),
-                ),
-              ),
+              // FlatButton(
+              //   color:  Color(0xff0077d7),
+              //   child: Text("START SEARCHING", style: TextStyle(color: Colors.white,
+              //   ),),
+              //   onPressed: () => Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => SearchScreen(),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

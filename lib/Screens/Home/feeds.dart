@@ -60,7 +60,7 @@ class _FeedsState extends State<Feeds> {
           .collection("posts")
           .where("visible", isEqualTo: true)
           .where("city", isEqualTo: cityName)
-          .orderBy('time', descending: true)
+          .orderBy('time', descending: true).limit(50)
           .snapshots();
     });
   }
@@ -164,7 +164,7 @@ class _FeedsState extends State<Feeds> {
           child: Column(
         children: [
           Container(
-            height: 100,
+            height: 120,
             width: 400,
             child: InkWell(
               onTap: () {
@@ -199,7 +199,7 @@ class _FeedsState extends State<Feeds> {
                       padding: const EdgeInsets.only(
                           top: 8.0, bottom: 8.0, left: 8.0),
                       child: Text(
-                        "Add a new post to for request from Donor.",
+                        "Add a new post to request from Donor.\n(verification of post takes about 30 minutes)",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -228,7 +228,7 @@ class _FeedsState extends State<Feeds> {
                           .collection("posts")
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
-                          .orderBy('time', descending: true)
+                          .orderBy('time', descending: true).limit(50)
                           .snapshots();
                     });
 
@@ -261,7 +261,7 @@ class _FeedsState extends State<Feeds> {
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
                           .where("plasma", isEqualTo: true)
-                          .orderBy('time', descending: true)
+                          .orderBy('time', descending: true).limit(50)
                           .snapshots();
                     });
                   },
@@ -289,7 +289,7 @@ class _FeedsState extends State<Feeds> {
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
                           .where("oxygen", isEqualTo: true)
-                          .orderBy('time', descending: true)
+                          .orderBy('time', descending: true).limit(50)
                           .snapshots();
                     });
                   },
@@ -317,7 +317,7 @@ class _FeedsState extends State<Feeds> {
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName  )
                           .where("medicine", isEqualTo: true)
-                          .orderBy('time', descending: true)
+                          .orderBy('time', descending: true).limit(50)
                           .snapshots();
                     });
                   },

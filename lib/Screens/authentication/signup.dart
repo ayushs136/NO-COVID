@@ -147,7 +147,7 @@ khali hai mtlb null hai
       body: loading == false
           ? SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(top: 100),
+                padding: EdgeInsets.only(top: 50  ),
                 alignment: Alignment.center,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -157,20 +157,20 @@ khali hai mtlb null hai
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Sign Up for to buy from ",
+                          "Sign Up to ask for help",
                           style: myStyle(30, Colors.black, FontWeight.bold),
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "Aas Pass",
+                          "No Covid: Help Desk",
                           style: myStyle(30, Colors.blue, FontWeight.bold),
                         ),
                       ],
                     ),
                     Text(
-                      "in less than a minute!",
+                      "We value your time!",
                       style: myStyle(25, Colors.black, FontWeight.bold),
                     ),
                     SizedBox(height: 20),
