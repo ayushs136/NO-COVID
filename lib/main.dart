@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Help Desk 2.0',
+          title: 'No Covid: Help Desk',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

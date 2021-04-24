@@ -10,7 +10,8 @@ import 'package:helpdesk_shift/screens/home/addPost.dart';
 
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
-
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:share/share.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
@@ -33,11 +34,32 @@ class _FeedsState extends State<Feeds> {
 
   bool darkMode = true;
   bool all = true, oxy = false, plasma = false, medicine = false;
+  var cityName;
+
+  getLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    final coordinates = new Coordinates(position.latitude, position.longitude);
+    cityName = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    cityName = cityName.first;
+    var x = cityName.addressLine.toString();
+    cityName = x.toString().split(",").reversed.toList()[2].trim();
+    setState(() {
+      cityName = cityName;
+      // cityName = "${cityName.featureName} : ${cityName.addressLine}";
+    });
+    // x = x.addressLine.toString();
+    print(x.toString().split(",").reversed.toList()[2]);
+
+    getTweetStream();
+  }
+
   getTweetStream() async {
     setState(() {
       postCollection = db
           .collection("posts")
           .where("visible", isEqualTo: true)
+          .where("city", isEqualTo: cityName)
           .orderBy('time', descending: true)
           .snapshots();
     });
@@ -52,6 +74,7 @@ class _FeedsState extends State<Feeds> {
   //
   initState() {
     super.initState();
+    getLocation();
     getTweetStream();
   }
 
@@ -67,7 +90,7 @@ class _FeedsState extends State<Feeds> {
       backgroundColor: darkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         title: Text(
-          "No COVID!",
+          "NO COVID: HELP DESK",
           style: TextStyle(color: darkMode ? Colors.white : Colors.black),
         ),
         centerTitle: true,
@@ -94,6 +117,20 @@ class _FeedsState extends State<Feeds> {
         //   ),
         // ),
         actions: [
+          IconButton(
+              icon: Icon(Icons.location_on_rounded, color: Colors.blue),
+              onPressed: () {
+                print(cityName);
+              }),
+          Center(
+              child: Text(
+            cityName == null
+                ? ""
+                : (cityName.length > 20
+                    ? cityName.substring(0, 9) + "..."
+                    : cityName),
+            style: TextStyle(color: Colors.white),
+          )),
           // Padding(
           //   padding: const EdgeInsets.all(8.0),
           //   child: Switch(
@@ -190,6 +227,7 @@ class _FeedsState extends State<Feeds> {
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
+                          .where("city", isEqualTo: cityName)
                           .orderBy('time', descending: true)
                           .snapshots();
                     });
@@ -206,7 +244,7 @@ class _FeedsState extends State<Feeds> {
                           all == true ? Colors.yellow : Colors.white,
                       label: Text("All",
                           style: TextStyle(
-                            color:  Colors.black,
+                            color: Colors.black,
                           )),
                     ),
                   ),
@@ -221,6 +259,7 @@ class _FeedsState extends State<Feeds> {
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
+                          .where("city", isEqualTo: cityName)
                           .where("plasma", isEqualTo: true)
                           .orderBy('time', descending: true)
                           .snapshots();
@@ -248,6 +287,7 @@ class _FeedsState extends State<Feeds> {
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
+                          .where("city", isEqualTo: cityName)
                           .where("oxygen", isEqualTo: true)
                           .orderBy('time', descending: true)
                           .snapshots();
@@ -275,6 +315,7 @@ class _FeedsState extends State<Feeds> {
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
+                          .where("city", isEqualTo: cityName  )
                           .where("medicine", isEqualTo: true)
                           .orderBy('time', descending: true)
                           .snapshots();
@@ -296,7 +337,10 @@ class _FeedsState extends State<Feeds> {
               ],
             ),
           ),
-          PostStream(darkMode: darkMode, collection: postCollection),
+          PostStream(
+              darkMode: darkMode,
+              collection: postCollection,
+              cityName: cityName),
         ],
       )),
     );
@@ -308,8 +352,9 @@ class PostStream extends StatefulWidget {
   // final String uid;
   bool darkMode;
   Stream collection;
-  String collectioName;
-  PostStream({Key key, this.darkMode, this.collection, this.collectioName})
+  String cityName;
+  PostStream(
+      {Key key, this.darkMode, this.collection, this.cityName = "Gwalior"})
       : super(key: key);
   // const PostStream({Key key, this.userStream, this.uid}) : super(key: key);
   @override
@@ -411,420 +456,433 @@ class _PostStreamState extends State<PostStream> {
               //           })
               //         });
 
-              return Column(
-                children: [
+              {
+                return Column(
+                  children: [
 //
-                  Card(
-                    elevation: 30,
+                    Card(
+                      elevation: 30,
 
-                    // borderOnForeground: true,
-                    shadowColor:
-                        widget.darkMode ? Colors.grey[500] : Colors.black,
-                    color: widget.darkMode ? Colors.black : Colors.white,
-                    // decoration: BoxDecoration(
-                    //   // borderRadius: BorderRadius.circular(8.0),
-                    //
-                    //   boxShadow: [
-                    //     BoxShadow(
-                    //       color: widget.darkMode ? Colors.white : Colors.black,
-                    //       blurRadius: 2.0,
-                    //       spreadRadius: 0.0,
-                    //       offset: Offset(
-                    //           2.0, 2.0), // shadow direction: bottom right
-                    //     )
-                    //   ],
-                    // ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () {
-                                      var tempUID = helperDoc['uid'];
+                      // borderOnForeground: true,
+                      shadowColor:
+                          widget.darkMode ? Colors.grey[500] : Colors.black,
+                      color: widget.darkMode ? Colors.black : Colors.white,
+                      // decoration: BoxDecoration(
+                      //   // borderRadius: BorderRadius.circular(8.0),
+                      //
+                      //   boxShadow: [
+                      //     BoxShadow(
+                      //       color: widget.darkMode ? Colors.white : Colors.black,
+                      //       blurRadius: 2.0,
+                      //       spreadRadius: 0.0,
+                      //       offset: Offset(
+                      //           2.0, 2.0), // shadow direction: bottom right
+                      //     )
+                      //   ],
+                      // ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                16.0, 16.0, 8.0, 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        var tempUID = helperDoc['uid'];
 
-                                      if (tempUID != uid) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HelperProfile(
-                                                // helper: Helper.fromMap(
-                                                //     helperDoc.data()
-                                                //     ),
-                                                helperUid: tempUID,
-                                              ),
-                                            ));
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UserProfile(),
-                                            ));
-                                      }
-                                    },
-                                    child: new Container(
-                                      height: 40.0,
-                                      width: 40.0,
-                                      decoration: new BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: new DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: new NetworkImage(
-                                                helperDoc['photoURL'] == null
-                                                    ? ''
-                                                    : helperDoc['photoURL'])),
+                                        if (tempUID != uid) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HelperProfile(
+                                                  // helper: Helper.fromMap(
+                                                  //     helperDoc.data()
+                                                  //     ),
+                                                  helperUid: tempUID,
+                                                ),
+                                              ));
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserProfile(),
+                                              ));
+                                        }
+                                      },
+                                      child: new Container(
+                                        height: 40.0,
+                                        width: 40.0,
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: new NetworkImage(
+                                                  helperDoc['photoURL'] == null
+                                                      ? ''
+                                                      : helperDoc['photoURL'])),
+                                        ),
+                                      ),
+                                    ),
+                                    new SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          helperDoc['username'],
+                                          style: TextStyle(
+                                              color: widget.darkMode
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        Text(
+                                          tAgo
+                                              .format(
+                                                  helperDoc['time'].toDate())
+                                              .toString(),
+                                          style: myStyle(
+                                              10, Colors.grey, FontWeight.bold),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                new IconButton(
+                                  icon:
+                                      Icon(Icons.more_vert, color: Colors.grey),
+                                  onPressed: null,
+                                )
+                              ],
+                            ),
+                          ),
+                          if (helperDoc['type'] == 1)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                helperDoc['tweet'],
+                                style: myStyle(
+                                    14,
+                                    widget.darkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    FontWeight.w400),
+                              ),
+                            ),
+                          if (helperDoc['type'] == 2)
+                            Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Container(
+                                // fit: FlexFit.loose,
+                                child: CachedNetworkImage(
+                                  imageUrl: helperDoc['image'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          if (helperDoc['type'] == 3)
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    helperDoc['tweet'],
+                                    style: myStyle(
+                                        12,
+                                        widget.darkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        FontWeight.w400),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (c) {
+                                      return Scaffold(
+                                          backgroundColor: widget.darkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          body: Center(
+                                            child: Hero(
+                                              tag: 'picHero' + helperDoc['id'],
+                                              child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      helperDoc['image'] == null
+                                                          ? ''
+                                                          : helperDoc['image']),
+                                            ),
+                                          ));
+                                    }));
+                                  },
+                                  onDoubleTap: () {
+                                    likepost(helperDoc['id']);
+                                  },
+                                  child: InteractiveViewer(
+                                    maxScale: 5.0,
+                                    child: SafeArea(
+                                      // fit: FlexFit.loose,
+                                      child: Hero(
+                                        tag: 'picHero' + helperDoc['id'],
+                                        child: CachedNetworkImage(
+                                          imageUrl: helperDoc['image'] == null
+                                              ? ''
+                                              : helperDoc['image'],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  new SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        helperDoc['username'],
-                                        style: TextStyle(
+                                ),
+                              ],
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                new Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    // InkWell(
+                                    //   onTap: () => likepost(helperDoc['id']),
+                                    //   child: Row(
+                                    //     children: [
+                                    //       // SizedBox(height: 30),
+                                    //       // Divider(
+                                    //       //   color: Colors.grey,
+                                    //       // ),
+                                    //       helperDoc['likes'].contains(uid)
+                                    //           ? Icon(
+                                    //               Icons.favorite,
+                                    //               color: Colors.red,
+                                    //               // size: 20,
+                                    //             )
+                                    //           : Icon(
+                                    //               FontAwesomeIcons.heart,
+                                    //               color: widget.darkMode
+                                    //                   ? Colors.white
+                                    //                   : Colors.black,
+                                    //               // size: 20,
+                                    //             ),
+                                    //       SizedBox(width: 10.0),
+                                    //       Text(
+                                    //         (helperDoc['likes'].length + 1)
+                                    //             .toString(),
+                                    //         style: myStyle(
+                                    //             15,
+                                    //             widget.darkMode
+                                    //                 ? Colors.white
+                                    //                 : Colors.black,
+                                    //             FontWeight.bold),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // new SizedBox(
+                                    //   width: 16.0,
+                                    // ),
+                                    GestureDetector(
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CommentsPage(
+                                                      helperDoc['id']))),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.message,
                                             color: widget.darkMode
                                                 ? Colors.white
                                                 : Colors.black,
-                                            fontWeight: FontWeight.w400),
+                                            size: 25,
+                                          ),
+                                          SizedBox(width: 10.0),
+                                          Text(
+                                            helperDoc['commentsCount']
+                                                .toString(),
+                                            style: myStyle(
+                                                15,
+                                                widget.darkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        tAgo
-                                            .format(helperDoc['time'].toDate())
-                                            .toString(),
-                                        style: myStyle(
-                                            10, Colors.grey, FontWeight.bold),
+                                    ),
+                                    new SizedBox(
+                                      width: 16.0,
+                                    ),
+                                    InkWell(
+                                      onTap: () => sharePost(
+                                          helperDoc['id'], helperDoc['tweet']),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            FontAwesomeIcons.paperPlane,
+                                            color: widget.darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            size: 20,
+                                          ),
+                                          SizedBox(width: 10.0),
+                                          Text(
+                                            helperDoc['shares'].toString(),
+                                            style: myStyle(
+                                                15,
+                                                widget.darkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                FontWeight.bold),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              new IconButton(
-                                icon: Icon(Icons.more_vert, color: Colors.grey),
-                                onPressed: null,
-                              )
-                            ],
+                                    ),
+                                  ],
+                                ),
+                                // new Icon(
+                                //   FontAwesomeIcons.bookmark,
+                                //   color: widget.darkMode
+                                //       ? Colors.white
+                                //       : Colors.black,
+                                // ),
+                                Row(
+                                  children: [
+                                    helperDoc['plasma'] == true
+                                        ? Chip(
+                                            shadowColor: Colors.red,
+                                            elevation: 5,
+                                            backgroundColor: Colors.red,
+                                            labelPadding: EdgeInsets.all(2.0),
+                                            // avatar: CircleAvatar(
+                                            //   backgroundColor: Colors.white70,
+                                            //   child: Icon(Icons.circle, color: Colors.red,),
+                                            // ),
+                                            label: Text(
+                                              " Plasma ",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                    SizedBox(width: 10),
+                                    helperDoc['oxygen'] == true
+                                        ? Chip(
+                                            shadowColor: Colors.green,
+                                            elevation: 5,
+                                            backgroundColor: Colors.green,
+                                            labelPadding: EdgeInsets.all(2.0),
+                                            // avatar: CircleAvatar(
+                                            //   backgroundColor: Colors.white70,
+                                            //   child: Icon(Icons.circle, color: Colors.red,),
+                                            // ),
+                                            label: Text(
+                                              " Oxygen ",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                    SizedBox(width: 10),
+                                    helperDoc['medicine'] == true
+                                        ? Chip(
+                                            shadowColor: Colors.pink,
+                                            elevation: 5,
+                                            backgroundColor: Colors.pink,
+                                            labelPadding: EdgeInsets.all(2.0),
+                                            // avatar: CircleAvatar(
+                                            //   backgroundColor: Colors.white70,
+                                            //   child: Icon(Icons.circle, color: Colors.red,),
+                                            // ),
+                                            label: Text(
+                                              "Medicine",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        if (helperDoc['type'] == 1)
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
-                              helperDoc['tweet'],
-                              style: myStyle(
-                                  14,
-                                  widget.darkMode ? Colors.white : Colors.black,
-                                  FontWeight.w400),
+                              "Location: " +
+                                  (helperDoc['city']).toString() +
+                                  ", " +
+                                  (helperDoc['state']).toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: widget.darkMode
+                                      ? Colors.white
+                                      : Colors.black),
                             ),
                           ),
-                        if (helperDoc['type'] == 2)
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
-                              // fit: FlexFit.loose,
-                              child: CachedNetworkImage(
-                                imageUrl: helperDoc['image'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        if (helperDoc['type'] == 3)
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  helperDoc['tweet'],
-                                  style: myStyle(
-                                      12,
-                                      widget.darkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      FontWeight.w400),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (c) {
-                                    return Scaffold(
-                                        backgroundColor: widget.darkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        body: Center(
-                                          child: Hero(
-                                            tag: 'picHero' + helperDoc['id'],
-                                            child: CachedNetworkImage(
-                                                imageUrl:
-                                                    helperDoc['image'] == null
-                                                        ? ''
-                                                        : helperDoc['image']),
-                                          ),
-                                        ));
-                                  }));
-                                },
-                                onDoubleTap: () {
-                                  likepost(helperDoc['id']);
-                                },
-                                child: InteractiveViewer(
-                                  maxScale: 5.0,
-                                  child: SafeArea(
-                                    // fit: FlexFit.loose,
-                                    child: Hero(
-                                      tag: 'picHero' + helperDoc['id'],
-                                      child: CachedNetworkImage(
-                                        imageUrl: helperDoc['image'] == null
-                                            ? ''
-                                            : helperDoc['image'],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  // InkWell(
-                                  //   onTap: () => likepost(helperDoc['id']),
-                                  //   child: Row(
-                                  //     children: [
-                                  //       // SizedBox(height: 30),
-                                  //       // Divider(
-                                  //       //   color: Colors.grey,
-                                  //       // ),
-                                  //       helperDoc['likes'].contains(uid)
-                                  //           ? Icon(
-                                  //               Icons.favorite,
-                                  //               color: Colors.red,
-                                  //               // size: 20,
-                                  //             )
-                                  //           : Icon(
-                                  //               FontAwesomeIcons.heart,
-                                  //               color: widget.darkMode
-                                  //                   ? Colors.white
-                                  //                   : Colors.black,
-                                  //               // size: 20,
-                                  //             ),
-                                  //       SizedBox(width: 10.0),
-                                  //       Text(
-                                  //         (helperDoc['likes'].length + 1)
-                                  //             .toString(),
-                                  //         style: myStyle(
-                                  //             15,
-                                  //             widget.darkMode
-                                  //                 ? Colors.white
-                                  //                 : Colors.black,
-                                  //             FontWeight.bold),
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // ),
-                                  // new SizedBox(
-                                  //   width: 16.0,
-                                  // ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CommentsPage(helperDoc['id']))),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.message,
-                                          color: widget.darkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                          size: 25,
-                                        ),
-                                        SizedBox(width: 10.0),
-                                        Text(
-                                          helperDoc['commentsCount'].toString(),
-                                          style: myStyle(
-                                              15,
-                                              widget.darkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  new SizedBox(
-                                    width: 16.0,
-                                  ),
-                                  InkWell(
-                                    onTap: () => sharePost(
-                                        helperDoc['id'], helperDoc['tweet']),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          FontAwesomeIcons.paperPlane,
-                                          color: widget.darkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                          size: 20,
-                                        ),
-                                        SizedBox(width: 10.0),
-                                        Text(
-                                          helperDoc['shares'].toString(),
-                                          style: myStyle(
-                                              15,
-                                              widget.darkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // new Icon(
-                              //   FontAwesomeIcons.bookmark,
-                              //   color: widget.darkMode
-                              //       ? Colors.white
-                              //       : Colors.black,
-                              // ),
-                              Row(
-                                children: [
-                                  helperDoc['plasma'] == true
-                                      ? Chip(
-                                          shadowColor: Colors.red,
-                                          elevation: 5,
-                                          backgroundColor: Colors.red,
-                                          labelPadding: EdgeInsets.all(2.0),
-                                          // avatar: CircleAvatar(
-                                          //   backgroundColor: Colors.white70,
-                                          //   child: Icon(Icons.circle, color: Colors.red,),
-                                          // ),
-                                          label: Text(
-                                            " Plasma ",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                  SizedBox(width: 10),
-                                  helperDoc['oxygen'] == true
-                                      ? Chip(
-                                          shadowColor: Colors.green,
-                                          elevation: 5,
-                                          backgroundColor: Colors.green,
-                                          labelPadding: EdgeInsets.all(2.0),
-                                          // avatar: CircleAvatar(
-                                          //   backgroundColor: Colors.white70,
-                                          //   child: Icon(Icons.circle, color: Colors.red,),
-                                          // ),
-                                          label: Text(
-                                            " Oxygen ",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                  SizedBox(width: 10),
-                                  helperDoc['medicine'] == true
-                                      ? Chip(
-                                          shadowColor: Colors.pink,
-                                          elevation: 5,
-                                          backgroundColor: Colors.pink,
-                                          labelPadding: EdgeInsets.all(2.0),
-                                          // avatar: CircleAvatar(
-                                          //   backgroundColor: Colors.white70,
-                                          //   child: Icon(Icons.circle, color: Colors.red,),
-                                          // ),
-                                          label: Text(
-                                            "Medicine",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            "Location: " +
-                                (helperDoc['city']).toString() +
-                                ", " +
-                                (helperDoc['state']).toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: widget.darkMode
-                                    ? Colors.white
-                                    : Colors.black),
-                          ),
-                        ),
-                        // Padding(
-                        //   padding:
-                        //       const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.start,
-                        //     children: <Widget>[
-                        //       new Container(
-                        //         height: 40.0,
-                        //         width: 40.0,
-                        //         decoration: new BoxDecoration(
-                        //           shape: BoxShape.circle,
-                        //           image: new DecorationImage(
-                        //               fit: BoxFit.fill,
-                        //               image: new NetworkImage(
-                        //                   "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
-                        //         ),
-                        //       ),
-                        //       new SizedBox(
-                        //         width: 10.0,
-                        //       ),
-                        //       Expanded(
-                        //         child: new TextField(
-                        //           decoration: new InputDecoration(
-                        //             border: InputBorder.none,
-                        //             hintText: "Add a comment...",
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        SizedBox(height: 10),
+                          // Padding(
+                          //   padding:
+                          //       const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.start,
+                          //     children: <Widget>[
+                          //       new Container(
+                          //         height: 40.0,
+                          //         width: 40.0,
+                          //         decoration: new BoxDecoration(
+                          //           shape: BoxShape.circle,
+                          //           image: new DecorationImage(
+                          //               fit: BoxFit.fill,
+                          //               image: new NetworkImage(
+                          //                   "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
+                          //         ),
+                          //       ),
+                          //       new SizedBox(
+                          //         width: 10.0,
+                          //       ),
+                          //       Expanded(
+                          //         child: new TextField(
+                          //           decoration: new InputDecoration(
+                          //             border: InputBorder.none,
+                          //             hintText: "Add a comment...",
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          SizedBox(height: 10),
 
-                        SizedBox(height: 20),
-                      ],
+                          SizedBox(height: 20),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              );
+                  ],
+                );
+              }
+              // else{
+              //   CircularProgressIndicator();
+              // }
             },
           );
         });

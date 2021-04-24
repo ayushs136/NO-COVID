@@ -14,7 +14,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("How to use \"Help Desk\" ?"),
+        title: Text("How to use \"No Covid: Help Desk\" ?"),
       ),
       
 

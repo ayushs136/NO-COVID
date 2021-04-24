@@ -13,8 +13,8 @@ class SideBarMenu extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Text(
-              "Help Desk",
-              style: TextStyle(fontSize: 30, color: Colors.white),
+              "No Covid: Help Desk",
+              style: TextStyle(fontSize: 30, color: Colors.black),
             ),
             decoration: BoxDecoration(
                 border: Border.all(width: 1.0, color: Colors.black),

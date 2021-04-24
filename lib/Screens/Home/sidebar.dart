@@ -13,15 +13,28 @@ class SideBarMenu extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Stack(children: [
-              Container(
-                child: Image.asset(
-                  Assets.helpDeskLogo,
-                ),
+            child: Column(
+             
+              children: [
+            
+              Stack(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 100,
+                    child: Image.asset(
+                      Assets.covidBackground ,
+                    ),
+
+                  ),
+                ],
               ),
+              
               Text(
-                "Help Desk",
-                style: TextStyle(fontSize: 30, color: Colors.white),
+                
+                "No Covid:\nHelp Desk",
+                
+                style: TextStyle(fontSize: 30, color: Colors.black),
               ),
             ]),
           ),
@@ -70,21 +83,21 @@ class SideBarMenu extends StatelessWidget {
           //     );
           //   },
           // ),
-          ListTile(
-            title: Text(
-              'Search',
-              style: TextStyle(fontSize: 20, color: Colors.grey[600]),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-            },
-          ),
+          // ListTile(
+          //   title: Text(
+          //     'Search',
+          //     style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+          //   ),
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => SearchScreen()),
+          //     );
+          //   },
+          // ),
           ListTile(
               title: Text(
-                'Contact Us',
+                'Volunteer with Us',
                 style: TextStyle(fontSize: 20, color: Colors.grey[600]),
               ),
               onTap: () {
@@ -94,12 +107,12 @@ class SideBarMenu extends StatelessWidget {
                       builder: (context) => Scaffold(
                             appBar: AppBar(
                               title: Text(
-                                "Contact Us",
+                                "Volunteer with Us",
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             body: WebView(
-                              initialUrl: 'https://dscrjit.co',
+                              initialUrl: 'https://imkronos.me',
                             ),
                           )),
                 );
