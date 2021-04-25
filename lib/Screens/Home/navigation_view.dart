@@ -4,12 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:helpdesk_shift/enum/user_state.dart';
 import 'package:helpdesk_shift/provider/user_provider.dart';
 import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
-import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
-import 'package:helpdesk_shift/screens/home/addPost.dart';
 import 'package:helpdesk_shift/screens/home/chat_screens/chat_list_screen.dart';
 
-import 'package:helpdesk_shift/screens/home/helper_list_screen.dart';
-import 'package:helpdesk_shift/screens/home/search.dart';
 import 'package:helpdesk_shift/screens/home/sidebar.dart';
 
 import 'package:helpdesk_shift/screens/home/user_profile.dart';

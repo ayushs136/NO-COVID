@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_shift/provider/assets.dart';
-import 'package:helpdesk_shift/screens/home/navigation_view.dart';
-import 'package:helpdesk_shift/screens/home/search.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

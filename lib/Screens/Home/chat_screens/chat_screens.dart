@@ -12,8 +12,6 @@ import 'package:helpdesk_shift/models/helper.dart';
 import 'package:helpdesk_shift/models/message.dart';
 import 'package:helpdesk_shift/provider/image_upload_provider.dart';
 import 'package:helpdesk_shift/resources/chat_methods.dart';
-
-import 'package:helpdesk_shift/screens/home/chat_screens/widgets/cached_image.dart';
 import 'package:helpdesk_shift/services/appbar.dart';
 import 'package:helpdesk_shift/services/customTile.dart';
 import 'package:helpdesk_shift/services/pickImage.dart';

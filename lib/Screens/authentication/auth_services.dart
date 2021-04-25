@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:helpdesk_shift/enum/user_state.dart';
 import 'package:helpdesk_shift/models/helper.dart';
-import 'package:helpdesk_shift/screens/home/chat_screens/widgets/online_dot_indicator.dart';
-import 'package:helpdesk_shift/shared/constants.dart';
 
 class AuthServices {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -177,7 +175,7 @@ class AuthServices {
       uid: currentUser.uid,
       email: currentUser.email,
       name: currentUser.displayName,
-      photoURL: currentUser.photoUrl,
+      photoURL: currentUser.photoURL,
       phone: currentUser.phoneNumber,
       skills: ["", "", "", ""],
       isAvailable: false,

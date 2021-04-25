@@ -3,10 +3,10 @@ import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:random_string/random_string.dart';
-import 'package:helpdesk_shift/Screens/Home/navigation_view.dart';
+
 
 class AddPost extends StatefulWidget {
   @override

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_shift/screens/authentication/google_login.dart';
-import 'package:helpdesk_shift/screens/home/custom_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';

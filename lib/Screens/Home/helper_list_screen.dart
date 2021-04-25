@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:helpdesk_shift/models/helper.dart';
-import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';

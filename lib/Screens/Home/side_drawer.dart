@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:helpdesk_shift/Screens/Home/contact_us.dart';
 import 'package:helpdesk_shift/Screens/Home/onboarding.dart';
 import 'package:helpdesk_shift/Screens/Home/setting.dart';
-import 'package:helpdesk_shift/Screens/Home/show_profile.dart';
 
 class SideBarMenu extends StatelessWidget {
   @override
