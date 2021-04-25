@@ -310,7 +310,7 @@ class _AddPostState extends State<AddPost> {
                     SelectState(
                       onCountryChanged: (value) {
                         setState(() {
-                          countryValue = value;
+                          countryValue = "India";
                           // print(countryValue);
                         });
                       },

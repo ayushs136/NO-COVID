@@ -112,12 +112,16 @@ class _CommentsPageState extends State<CommentsPage> {
                                         15, Colors.black, FontWeight.w400),
                                   ),
                                   SizedBox(width: 15),
-                                  Text(
-                                    commentDoc['comment'],
-                                    style: myStyle(
-                                      20,
-                                      Colors.grey,
-                                      FontWeight.w500,
+                                  Expanded(
+                                                                      child: Text(
+                                      commentDoc['comment'],
+                                      style: myStyle(
+                                        15,
+                                        Colors.grey,
+                                        FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.justify,
+                                      maxLines: 4,
                                     ),
                                   ),
                                 ],

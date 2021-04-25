@@ -41,11 +41,10 @@ class _HelperProfileState extends State<HelperProfile> {
     return FutureBuilder<DocumentSnapshot>(
         future: users.doc(widget.helperUid).get(),
         builder: (context, snapshot) {
-          Map<String, dynamic> data = snapshot.data.data();
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
-
+          Map<String, dynamic> data = snapshot.data.data();
           return Scaffold(
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
@@ -189,19 +188,21 @@ class _HelperProfileState extends State<HelperProfile> {
 
                     (data['isAvailable'] == true)
                         ? RaisedButton(
+                        
+                          elevation: 10,
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ChatScreen(
                                         receiver: Helper.fromMap(data),
                                       )));
                             },
-                            color: Color(0xff0184dc),
+                            color: Colors.blue,
                             child: Text(
-                              "Ask for Help!",
+                              "Help Now!",
                               // snapshot.data.email,
                               // 'chun.li@thenetninja.co.uk',
                               style: TextStyle(
-                                color: Color(0xff19191b),
+                                color: Colors.white,
                                 fontSize: 20.0,
                                 letterSpacing: 1.0,
                               ),

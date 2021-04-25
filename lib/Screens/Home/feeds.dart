@@ -579,9 +579,10 @@ class _PostStreamState extends State<PostStream> {
                                 )
                               ],
                             ),
-                            
                           ),
-                          Divider(color: Colors.grey[800],),  
+                          Divider(
+                            color: Colors.grey[800],
+                          ),
                           if (helperDoc['type'] == 1)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -664,7 +665,9 @@ class _PostStreamState extends State<PostStream> {
                                 ),
                               ],
                             ),
-                            Divider(color: Colors.grey[800],),
+                          Divider(
+                            color: Colors.grey[800],
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
@@ -789,65 +792,76 @@ class _PostStreamState extends State<PostStream> {
                                 //       ? Colors.white
                                 //       : Colors.black,
                                 // ),
-                                Row(
-                                  children: [
-                                    helperDoc['plasma'] == true
-                                        ? Chip(
-                                            shadowColor: Colors.purple,
-                                            elevation: 5,
-                                            backgroundColor: Colors.purple,
-                                            labelPadding: EdgeInsets.all(2.0),
-                                            // avatar: CircleAvatar(
-                                            //   backgroundColor: Colors.white70,
-                                            //   child: Icon(Icons.circle, color: Colors.red,),
-                                            // ),
-                                            label: Text(
-                                              " Plasma ",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                    SizedBox(width: 10),
-                                    helperDoc['oxygen'] == true
-                                        ? Chip(
-                                            shadowColor: Colors.green,
-                                            elevation: 5,
-                                            backgroundColor: Colors.green,
-                                            labelPadding: EdgeInsets.all(2.0),
-                                            // avatar: CircleAvatar(
-                                            //   backgroundColor: Colors.white70,
-                                            //   child: Icon(Icons.circle, color: Colors.red,),
-                                            // ),
-                                            label: Text(
-                                              " Oxygen ",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                    SizedBox(width: 10),
-                                    helperDoc['medicine'] == true
-                                        ? Chip(
-                                            shadowColor: Colors.pink,
-                                            elevation: 5,
-                                            backgroundColor: Colors.pink,
-                                            labelPadding: EdgeInsets.all(2.0),
-                                            // avatar: CircleAvatar(
-                                            //   backgroundColor: Colors.white70,
-                                            //   child: Icon(Icons.circle, color: Colors.red,),
-                                            // ),
-                                            label: Text(
-                                              "Medicine",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ],
+                                Expanded(
+                                                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(),
+                                      child: Row(
+                                        children: [
+                                          helperDoc['plasma'] == true
+                                              ? Chip(
+                                                  shadowColor: Colors.purple,
+                                                  elevation: 5,
+                                                  backgroundColor: Colors.purple,
+                                                  labelPadding:
+                                                      EdgeInsets.all(2.0),
+                                                  // avatar: CircleAvatar(
+                                                  //   backgroundColor: Colors.white70,
+                                                  //   child: Icon(Icons.circle, color: Colors.red,),
+                                                  // ),
+                                                  label: Text(
+                                                    " Plasma ",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(),
+                                          SizedBox(width: 5),
+                                          helperDoc['oxygen'] == true
+                                              ? Chip(
+                                                  shadowColor: Colors.green,
+                                                  elevation: 5,
+                                                  backgroundColor: Colors.green,
+                                                  labelPadding:
+                                                      EdgeInsets.all(2.0),
+                                                  // avatar: CircleAvatar(
+                                                  //   backgroundColor: Colors.white70,
+                                                  //   child: Icon(Icons.circle, color: Colors.red,),
+                                                  // ),
+                                                  label: Text(
+                                                    " Oxygen ",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(),
+                                          SizedBox(width: 5),
+                                          helperDoc['medicine'] == true
+                                              ? Chip(
+                                                  shadowColor: Colors.pink,
+                                                  elevation: 5,
+                                                  backgroundColor: Colors.pink,
+                                                  labelPadding:
+                                                      EdgeInsets.all(2.0),
+                                                  // avatar: CircleAvatar(
+                                                  //   backgroundColor: Colors.white70,
+                                                  //   child: Icon(Icons.circle, color: Colors.red,),
+                                                  // ),
+                                                  label: Text(
+                                                    "Medicine",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
