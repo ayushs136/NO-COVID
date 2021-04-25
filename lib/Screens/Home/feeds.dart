@@ -60,7 +60,8 @@ class _FeedsState extends State<Feeds> {
           .collection("posts")
           .where("visible", isEqualTo: true)
           .where("city", isEqualTo: cityName)
-          .orderBy('time', descending: true).limit(50)
+          .orderBy('time', descending: true)
+          .limit(50)
           .snapshots();
     });
   }
@@ -121,16 +122,19 @@ class _FeedsState extends State<Feeds> {
               icon: Icon(Icons.location_on_rounded, color: Colors.blue),
               onPressed: () {
                 print(cityName);
+                getLocation();
               }),
           Center(
               child: Text(
-            cityName == null
-                ? ""
-                : (cityName.length > 20
-                    ? cityName.substring(0, 9) + "..."
-                    : cityName),
-            style: TextStyle(color: Colors.white),
-          )),
+                  cityName == null
+                      ? "Turn on\nLocation\n& tap on icon"
+                      : (cityName.length > 20
+                          ? cityName.substring(0, 9) + "..."
+                          : cityName),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: cityName == null ? 10 : 15,
+                  ))),
           // Padding(
           //   padding: const EdgeInsets.all(8.0),
           //   child: Switch(
@@ -199,7 +203,7 @@ class _FeedsState extends State<Feeds> {
                       padding: const EdgeInsets.only(
                           top: 8.0, bottom: 8.0, left: 8.0),
                       child: Text(
-                        "Add a new post to request from Donor.\n(verification of post takes about 30 minutes)",
+                        "Add a new post to request from Donor.\n(Verification of post takes about 30 minutes)",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -213,7 +217,7 @@ class _FeedsState extends State<Feeds> {
             ),
           ),
           Card(
-            color: Colors.pink,
+            color: Colors.black,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -228,7 +232,8 @@ class _FeedsState extends State<Feeds> {
                           .collection("posts")
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
-                          .orderBy('time', descending: true).limit(50)
+                          .orderBy('time', descending: true)
+                          .limit(50)
                           .snapshots();
                     });
 
@@ -261,7 +266,8 @@ class _FeedsState extends State<Feeds> {
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
                           .where("plasma", isEqualTo: true)
-                          .orderBy('time', descending: true).limit(50)
+                          .orderBy('time', descending: true)
+                          .limit(50)
                           .snapshots();
                     });
                   },
@@ -289,7 +295,8 @@ class _FeedsState extends State<Feeds> {
                           .where("visible", isEqualTo: true)
                           .where("city", isEqualTo: cityName)
                           .where("oxygen", isEqualTo: true)
-                          .orderBy('time', descending: true).limit(50)
+                          .orderBy('time', descending: true)
+                          .limit(50)
                           .snapshots();
                     });
                   },
@@ -315,9 +322,10 @@ class _FeedsState extends State<Feeds> {
                       postCollection = db
                           .collection("posts")
                           .where("visible", isEqualTo: true)
-                          .where("city", isEqualTo: cityName  )
+                          .where("city", isEqualTo: cityName)
                           .where("medicine", isEqualTo: true)
-                          .orderBy('time', descending: true).limit(50)
+                          .orderBy('time', descending: true)
+                          .limit(50)
                           .snapshots();
                     });
                   },
@@ -336,6 +344,9 @@ class _FeedsState extends State<Feeds> {
                 ),
               ],
             ),
+          ),
+          Divider(
+            color: Colors.grey,
           ),
           PostStream(
               darkMode: darkMode,
@@ -568,14 +579,17 @@ class _PostStreamState extends State<PostStream> {
                                 )
                               ],
                             ),
+                            
                           ),
+                          Divider(color: Colors.grey[800],),  
                           if (helperDoc['type'] == 1)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 helperDoc['tweet'],
+                                textAlign: TextAlign.justify,
                                 style: myStyle(
-                                    14,
+                                    15,
                                     widget.darkMode
                                         ? Colors.white
                                         : Colors.black,
@@ -650,6 +664,7 @@ class _PostStreamState extends State<PostStream> {
                                 ),
                               ],
                             ),
+                            Divider(color: Colors.grey[800],),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
@@ -696,54 +711,43 @@ class _PostStreamState extends State<PostStream> {
                                     // new SizedBox(
                                     //   width: 16.0,
                                     // ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CommentsPage(
-                                                      helperDoc['id']))),
-                                      child: Row(
-                                        children: [
-                                          Icon(
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CommentsPage(
+                                                          helperDoc['id']))),
+                                          icon: Icon(
                                             Icons.message,
-                                            color: widget.darkMode
-                                                ? Colors.white
-                                                : Colors.black,
                                             size: 25,
                                           ),
-                                          SizedBox(width: 10.0),
-                                          Text(
-                                            helperDoc['commentsCount']
-                                                .toString(),
-                                            style: myStyle(
-                                                15,
-                                                widget.darkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
+                                          color: widget.darkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        Text(
+                                          helperDoc['commentsCount'].toString(),
+                                          style: myStyle(
+                                              15,
+                                              widget.darkMode
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              FontWeight.bold),
+                                        ),
+                                      ],
                                     ),
                                     new SizedBox(
                                       width: 16.0,
                                     ),
-                                    InkWell(
-                                      onTap: () => sharePost(
-                                          helperDoc['id'], helperDoc['tweet']),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            FontAwesomeIcons.paperPlane,
-                                            color: widget.darkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 10.0),
-                                          Text(
-                                            helperDoc['shares'].toString(),
+                                    Row(
+                                      children: [
+                                        FlatButton.icon(
+                                          label: Text(
+                                            "Share",
                                             style: myStyle(
                                                 15,
                                                 widget.darkMode
@@ -751,8 +755,31 @@ class _PostStreamState extends State<PostStream> {
                                                     : Colors.black,
                                                 FontWeight.bold),
                                           ),
-                                        ],
-                                      ),
+                                          onPressed: () => sharePost(
+                                              helperDoc['id'],
+                                              helperDoc['tweet']),
+                                          icon: Icon(
+                                            Icons.share,
+                                            size: 25,
+                                            color: widget.darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                          color: widget.darkMode
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        // Text(
+                                        //   helperDoc['shares'].toString(),
+                                        //   style: myStyle(
+                                        //       15,
+                                        //       widget.darkMode
+                                        //           ? Colors.white
+                                        //           : Colors.black,
+                                        //       FontWeight.bold),
+                                        // ),
+                                      ],
                                     ),
                                   ],
                                 ),

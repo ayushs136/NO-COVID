@@ -1,4 +1,4 @@
-package com.clintonfredo.helpdesk2
+package com.clintonfredo.nocovid
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

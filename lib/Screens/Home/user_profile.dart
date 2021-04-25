@@ -6,7 +6,6 @@ import 'package:helpdesk_shift/models/skills.dart';
 import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
 import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 
-
 class UserProfile extends StatefulWidget {
   final Helper helper;
   UserProfile({this.helper});
@@ -126,7 +125,7 @@ class _UserProfileState extends State<UserProfile> {
               ],
               centerTitle: true,
               title: Text(
-                "${snapshot.data.data()['displayName'].toString().toUpperCase()}'s Profile",
+                "${snapshot.data.data()['displayName'].toString().toUpperCase()}'S PROFILE",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: Color(0xff000000),
@@ -158,7 +157,9 @@ class _UserProfileState extends State<UserProfile> {
                         radius: 40.0,
                         backgroundImage: NetworkImage(
                           // 'https://lh3.googleusercontent.com/-5axQsnH1ZuM/AAAAAAAAAAI/AAAAAAAAAAA/xAYbnZ7p5AM/s190-p/photo.jpg',
-                          snapshot.data.data()['photoURL'],
+                          snapshot.data.data()['photoURL'] == ''
+                              ? 'https://static.thenounproject.com/png/538846-200.png'
+                              : snapshot.data.data()['photoURL'],
                         ),
                       ),
                     ),
@@ -167,7 +168,7 @@ class _UserProfileState extends State<UserProfile> {
                       height: 60.0,
                     ),
                     Text(
-                      'UserName',
+                      'Username',
                       style: TextStyle(
                         color: Colors.grey,
                         letterSpacing: 2.0,
@@ -175,7 +176,12 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      snapshot.data.data()['displayName'] == null ? "" :snapshot.data.data()['displayName'].toString().toUpperCase(),
+                      snapshot.data.data()['displayName'] == null
+                          ? ""
+                          : snapshot.data
+                              .data()['displayName']
+                              .toString()
+                              .toUpperCase(),
                       style: TextStyle(
                         color: Colors.amberAccent[200],
                         fontWeight: FontWeight.bold,
@@ -194,7 +200,7 @@ class _UserProfileState extends State<UserProfile> {
 
                     SizedBox(height: 30.0),
                     Text(
-                      'email',
+                      'Email',
                       style: TextStyle(
                         color: Colors.grey,
                         letterSpacing: 2.0,
@@ -203,7 +209,7 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(height: 10.0),
                     Text(
                       // "${(snapshot.data.skills == null) ? 'N/A' : (snapshot.data.skills[0]) + " | " + snapshot.data.skills[1] + " | " + snapshot.data.skills[2] + " | " + snapshot.data.skills[3]}",
-                    snapshot.data.data()['email'],
+                      snapshot.data.data()['email'],
                       // snapshot.data.skills[0] +
                       //     "\n" +
                       //     snapshot.data.skills[1] +
@@ -262,7 +268,7 @@ class _UserProfileState extends State<UserProfile> {
                         style: TextStyle(
                           color: Colors.grey[400],
                           fontSize: 15.0,
-                          letterSpacing: 2.0,
+                          // letterSpacing: 2.0,
                         ),
                       ),
                       subtitle: Text(
@@ -284,27 +290,52 @@ class _UserProfileState extends State<UserProfile> {
                         updateAvailability(val);
                       },
                     ),
-                    SizedBox(height: 20,),
-                    Container(
-                      width: 100,
-                      height: 50,
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Divider(color: Colors.grey),
+                    FlatButton(
                       color: Colors.yellow,
-                                          child: ListTile(
-                        onTap: () async {
-                          try {
-                            AuthServices auth = ProviderWidget.of(context).auth;
-                            await auth.signOut();
-                            print("Signed out");
-                          } catch (e) {
-                            print(e + " error siging out");
-                          }
-                        },
-                        title: Text("LOGOUT", style:TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                          ),),
+                      onPressed: () async {
+                        try {
+                          AuthServices auth = ProviderWidget.of(context).auth;
+                          await auth.signOut();
+                          print("Signed out");
+                        } catch (e) {
+                          print(e + " error siging out");
+                        }
+                      },
+                      child: Text(
+                        "LOGOUT",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
+                    // Container(
+                    //   width: 100,
+                    //   height: 50,
+                    //   color: Colors.yellow,
+                    //   child: ListTile(
+                    //     onTap: () async {
+                    //       try {
+                    //         AuthServices auth = ProviderWidget.of(context).auth;
+                    //         await auth.signOut();
+                    //         print("Signed out");
+                    //       } catch (e) {
+                    //         print(e + " error siging out");
+                    //       }
+                    //     },
+                    //     title: Text(
+                    //       "LOGOUT",
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 15.0,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

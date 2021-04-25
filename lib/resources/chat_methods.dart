@@ -91,6 +91,6 @@ class ChatMethods {
           .collection(CHAT_COLLECTION)
           .doc(senderId)
           .collection(receiverId)
-          .orderBy('timestamp')
+          .orderBy('timestamp', descending: true)
           .snapshots();
 }

@@ -59,6 +59,8 @@ class _SignUpState extends State<SignUp> {
           'dateCreated': DateTime.now(),
           'photoURL': '',
           'isVerified': false,
+          'isAvailable': false,
+          
         }, SetOptions(merge: true));
         updateProfileDetails();
         sendVerification();
@@ -105,7 +107,7 @@ khali hai mtlb null hai
 
   passwordValidator(value) {
     if (value.isEmpty || value.length < 7) {
-      return 'Password must be 6 characters long!';
+      return 'Password must be 7 characters long!';
     }
     return null;
   }
@@ -292,7 +294,7 @@ khali hai mtlb null hai
                                 filled: true,
                                 fillColor: Colors.white,
                                 labelText:
-                                    "Create a new Password (Min. 6 Chars)",
+                                    "Create a new Password (Min. 7 Chars)",
                                 labelStyle: myStyle(
                                     15, Colors.grey[900], FontWeight.w200),
                                 // border: OutlineInputBorder(

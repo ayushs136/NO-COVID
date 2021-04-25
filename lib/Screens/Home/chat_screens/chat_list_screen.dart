@@ -4,7 +4,6 @@ import 'package:helpdesk_shift/models/contact.dart';
 import 'package:helpdesk_shift/provider/user_provider.dart';
 import 'package:helpdesk_shift/resources/chat_methods.dart';
 import 'package:helpdesk_shift/screens/home/chat_screens/widgets/contact_view.dart';
-import 'package:helpdesk_shift/screens/home/chat_screens/widgets/new_chat_button.dart';
 import 'package:provider/provider.dart';
 
 import 'quite_box.dart';

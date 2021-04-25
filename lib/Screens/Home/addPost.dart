@@ -311,19 +311,19 @@ class _AddPostState extends State<AddPost> {
                       onCountryChanged: (value) {
                         setState(() {
                           countryValue = value;
-                          print(countryValue);
+                          // print(countryValue);
                         });
                       },
                       onStateChanged: (value) {
                         setState(() {
                           stateValue = value;
-                          print(stateValue);
+                          // print(stateValue);
                         });
                       },
                       onCityChanged: (value) {
                         setState(() {
                           cityValue = value;
-                          print(cityValue);
+                          // print(cityValue);
                         });
                       },
                     ),

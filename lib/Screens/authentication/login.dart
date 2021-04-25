@@ -110,7 +110,7 @@ class _LoginState extends State<Login> {
 
   passwordValidator(value) {
     if (value.isEmpty || value.length < 7) {
-      return 'Password must be 6 characters long!';
+      return 'Password must be 7 characters long!';
     }
     return null;
   }
@@ -256,7 +256,7 @@ class _LoginState extends State<Login> {
                                 border: InputBorder.none,
                                 filled: true,
                                 fillColor: Colors.white,
-                                labelText: "Enter your password (Min. 6 chars)",
+                                labelText: "Enter your password (Min. 7 chars)",
                                 labelStyle: myStyle(15, Colors.grey[900]),
                                 // border: OutlineInputBorder(
                                 //     borderRadius: BorderRadius.circular(20)),
